@@ -1,6 +1,8 @@
 // console.log(window.location);
 
 let MON_SUPER_SITE = {};
+let total = 0;
+var products = [];
 
 let addLogoutButton = function () {
     $('.logout').load('templates/partials/_logout.html');
@@ -59,3 +61,23 @@ handleRequest();
 $(window).on('hashchange', handleRequest);
 
 $('body').on('SECURITY_LOGOUT', handleRequest);
+
+let calcutateTotalPrice = function() {
+    let total = 0;
+    products = JSON.parse(localStorage.getItem('products'));
+
+    $.each(products, function(index, value) {
+        if (value.price) {
+            total += value.price * 1;
+        }
+    });
+
+    return total;
+}
+
+let updateCartPrice = function () {
+    $('.total').text(calcutateTotalPrice() + ' €');
+}
+updateCartPrice();
+
+$('body').on('PRODUCT_ADDED_TO_CART', updateCartPrice);
